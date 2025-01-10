@@ -1,0 +1,22 @@
+sensor_kit_base_link:
+  imu_link:
+    x: -0.12
+    y: 0.0
+    z: 0.52
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+  gnss_left_link:
+    x: -0.12
+    y: 0.55
+    z: 0.49
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0
+  gnss_right_link:
+    x: -0.12
+    y: -0.55
+    z: 0.49
+    roll: 0.0
+    pitch: 0.0
+    yaw: 0.0

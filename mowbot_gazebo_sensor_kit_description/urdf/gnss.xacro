@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:macro name="gnss_macro" params="name parent namespace x y z roll pitch yaw fps">
+    <xacro:property name="sensor_box" value="0.05"/>
+    <xacro:property name="mass" value="0.01"/>
+
+    <joint name="${name}_joint" type="fixed">
+      <origin rpy="${roll} ${pitch} ${yaw}" xyz="${x} ${y} ${z}"/>
+      <parent link="${parent}"/>
+      <child link="${name}_link"/>
+    </joint>
+
+    <link name="${name}_link">
+      <visual>
+        <geometry>
+          <box size="${sensor_box} ${sensor_box} ${sensor_box}"/>
+        </geometry>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <material name="red">
+          <color rgba="1.0 0.0 0.0 1.0"/>
+        </material>
+      </visual>
+      <inertial>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <mass value="${mass}"/>
+        <inertia
+          ixx="${(sensor_box*sensor_box+sensor_box*sensor_box)*mass/12.0}"
+          ixy="0.0"
+          ixz="0.0"
+          iyy="${(sensor_box*sensor_box+sensor_box*sensor_box)*mass/12.0}"
+          iyz="0.0"
+          izz="${(sensor_box*sensor_box+sensor_box*sensor_box)*mass/12.0}"
+        />
+      </inertial>
+      <!-- <collision>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <box size="${sensor_box} ${sensor_box} ${sensor_box}"/>
+        </geometry>
+      </collision> -->
+    </link>
+
+    <!-- gnss -->
+    <gazebo reference="${name}_link">
+      <material>Gazebo/Black</material>
+      <sensor name="${name}_sensor" type="gps">
+        <always_on>true</always_on>
+        <update_rate>${fps}</update_rate>
+        <visualize>true</visualize>
+        <topic>__default_topic__</topic>
+        <plugin name="${name}_gazebo_ros_gps" filename="libgazebo_ros_gps_sensor.so">
+          <ros>
+            <remapping>~/out:=/${name}/fix</remapping>
+            <remapping>~/vel:=/${name}/velocity</remapping>
+          </ros>
+        </plugin>
+      </sensor>
+    </gazebo>
+
+  </xacro:macro>
+</robot>
